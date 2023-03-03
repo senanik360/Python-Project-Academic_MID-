@@ -2,13 +2,57 @@ import json
 from jsonModule import *
 
 jsonFileName='E:\\Python\\MID Project\\PcList.json'
+PC_List={}        
+
 class PC : 
 
 
     def __init__(self,PC_List) :
         self.PC_List=PC_List
 
-        
+
+           # -----------------------------------------------------------------
+            # =================================================================
+            # -----------------------------------------------------------------  
+
+    def main(self):        
+        print("\n\t\t****** Menu ******\n")
+        print("\t|----------------------------------")
+        print("\t| 1. Show all PC")
+        print("\t| 2. Search a PC")
+        print("\t| 3. Add PC")
+        print("\t| 4. Update PC")
+        print("\t| 5. Remove PC")
+        print("\t| 6. Functionality of PC")
+        print("\t| 7. Store PC")
+        print("\t| 8. Quit")
+        print("\t|----------------------------------")
+
+        check=int(input("--> Select an option <--\n"))
+
+
+        while check<1 or check>8:
+            check=int(input("\n\nInvalid input! Try again.: "))
+
+        if check==1:
+            self.show_all_pc()
+        elif check==2:
+            self.show_pc()
+        elif check==3:
+            self.add_pc()
+        elif check==4:
+            check=input("Press the PC No. you want to update: ")
+            self.update_pc(check)
+        elif check==5:
+            check=input("Press the PC No. you want to remove: ")
+            self.remove_pc(check)
+        elif check==6:
+            self.show_functionality()
+        elif check==7:
+            self.store_pc()
+        else: 
+            return 
+
             # -----------------------------------------------------------------
             # =================================================================
             # -----------------------------------------------------------------
@@ -48,7 +92,7 @@ class PC :
                 self.PC_List[pc_no] = {"OS": os, "STATUS": status}
             # temporary taken in a list.
                 print("PC added successfully.")
-                self.store_pc()
+                self.store_pc(pc_no)
             
             else:
                 print("\t------ Numerical input expected. -------\n")
@@ -75,30 +119,53 @@ class PC :
             # =================================================================
             # -----------------------------------------------------------------
 
-    def store_pc(self):
+    def store_pc(self,pc_no):
         """For storing PC in Lab"""
         filename = 'PcList.json'
-        with open(jsonFileName) as f:
+        with open(jsonFileName,'r') as f:
             FileContent=json.load(f)
 
         with open(jsonFileName,'w') as f:
            json.dump(PC_List,f)
 
-        check=int(input("\n\nPress 0 to go back to Menu: "))
-        if check==0:
-            self.main()
+        check=int(input("\n\nPress 1 to save info in a text file \n\tOR\nPress 0 to go back to menu : "))
+        while check!=0 or check!=1:
+            if check==0:
+                self.main()
+            else:
+                filename=input("Write File Name: ")
+                filename+='.txt'
+                filename='E:\\Python\\MID Project\\'+filename
+
+                try:
+                    with open(filename, 'a') as file:
+                            for pc_no,pc_function in FileContent.items():
+                                file.write(f"PC number:{pc_no}\n", )
+                                file.writelines(f"OS:{pc_function['OS']}\n", )
+                                file.writelines(f"STATUS:{pc_function['STATUS']}\n", )
+                                file.write("\n")
+
+                            print("\nPC details stored in file\n")
+                            check=int(input("To see the stored details press 1: "))
+                            if check==1:
+                                with open(filename) as file:
+                                    for line in file:
+                                        print(line)
+                except FileNotFoundError: 
+                    print("Sorry, file not found")
+
+                check=int(input("\n\nPress 0 to go back to Menu: "))
+                if check==0:
+                    self.main()
+
 
             # -----------------------------------------------------------------
             # =================================================================
-            # -----------------------------------------------------------------          
- 
+            # -----------------------------------------------------------------
 
 
-            # -----------------------------------------------------------------
-            # =================================================================
-            # -----------------------------------------------------------------
     def remove_pc(self,pc_no):
-        """This method is for deleting a particular pc from lab"""
+        """used for remove particular pc"""
         with open(jsonFileName) as f:
             FileContent=json.load(f)
 
@@ -119,7 +186,7 @@ class PC :
             # -----------------------------------------------------------------
 
     def update_pc(self,pc_no):
-        """This is for updating PC info such as os,status"""
+        """used for update particular pc"""
 
         with open(jsonFileName) as f:
             FileContent=json.load(f)
@@ -140,21 +207,23 @@ class PC :
 
         check=int(input("\n\nPress 0 to go back to Menu: "))
         if check==0:
-            self.main()            
+            self.main()         
+
+
             # -----------------------------------------------------------------
             # =================================================================
             # -----------------------------------------------------------------
 
 
     def show_all_pc(self):
-        """This method will show all pc info including os, status"""
+        """used for show the details of all pc """
 
         print("\n\nLab PC information\n")
         with open(jsonFileName) as f:
             FileContent=json.load(f)
 
         if not FileContent:
-            print("No PCs found.")
+            print("No PC found.")
         else:
             for pc_no,pc_function in FileContent.items():
                 print(f"PC number:{pc_no}", )
@@ -171,7 +240,7 @@ class PC :
             # -----------------------------------------------------------------
 
     def show_pc(self):
-        """This is for displaying info of a particular PC"""
+        """used for search particular PC"""
         print("\nSearch for a PC info\n")
         pc_number = input("Enter PC number: ")
         with open(jsonFileName) as f:
@@ -189,51 +258,9 @@ class PC :
         check=input("\n\nPress 0 to go back to Menu: ")
         if check=='0':
             self.main()
-            # -----------------------------------------------------------------
-            # =================================================================
-            # -----------------------------------------------------------------  
-
-    def main(self):
-        print(PC_List)
-        """This method is to display main menu"""
-
-        print("\n\t\t****** Menu ******\n")
-        print("\t|----------------------------------")
-        print("\t| 1. Show all PC")
-        print("\t| 2. Search a PC")
-        print("\t| 3. Add PC")
-        print("\t| 4. Update PC")
-        print("\t| 5. Remove PC")
-        print("\t| 6. Functionality of PC")
-        print("\t| 7. Store PC")
-        print("\t| 8. Quit")
-        print("\t|----------------------------------")
-
-        check=int(input("--> Select an option <--\n"))
+ 
 
 
-        while check<1 or check>8:
-            check=int(input("\n\nInvalid input! Try again.: "))
 
-        if check==1:
-            self.show_all_pc()
-        elif check==2:
-            self.show_pc()
-        elif check==3:
-            self.add_pc()
-        elif check==4:
-            check=input("Press the PC No. you want to update: ")
-            self.update_pc(check)
-        elif check==5:
-            check=input("Press the PC No. you want to remove: ")
-            self.remove_pc(check)
-        elif check==6:
-            self.show_functionality()
-        elif check==7:
-            self.store_pc()
-        else: 
-            return 
-
-PC_List={}        
-labobj=PC(PC_List)
-labobj.main()
+obj=PC(PC_List)
+obj.main()
