@@ -1,79 +1,91 @@
 import json
+from jsonModule import *
+
+jsonFileName='E:\\Python\\MID Project\\PcList.json'
 class PC : 
+
 
     def __init__(self,PC_List) :
         self.PC_List=PC_List
+
+        
             # -----------------------------------------------------------------
             # =================================================================
             # -----------------------------------------------------------------
 
     def add_pc(self):
-        """This method is to add new PC in the lab"""
+        """For add new PC in Lab"""
         pc_no = input("PC no: ")
 
-        with open('PcList.json') as f:
-            FileContent=json.load(f)
-        if pc_no in FileContent:
-            print("PC number already exists.\n------\nPress\n")
-            print("1. Modify existing PC")
-            print("2. Remove existing PC")
-            print("3. Back")
-
-            check = int(input("\nEnter your choice: "))
-
-            while check<1 or check>3:
-                check=input("Invalid input.! Please Try Again. ")
-
-            if check == 1:
-                self.update_pc(pc_no)
-                pass
-            elif check == 2:
-                self.remove_pc(pc_no)
-                pass
-            elif check == 3:
-                self.main()
+        try:
             
-        elif(pc_no.isdigit()):
-            os = input("Installed operating system : ")
-            status = input("Status : ")
-            self.PC_List[pc_no] = {"OS": os, "STATUS": status}
-            print("PC added successfully.")
-            self.store_pc()
-        else:
-            print("\t------ Numerical input expected. -------\n")
-            print("\n------\nPress\n")
-            print("1. Go back to menu")
-            print("2. Try Again")
-            check=int(input())
-            while check!=1 and check!=2:
-                check=input("Invalid input.! Please Try Again. ")
-            if check==1:
-                self.main()
+            if pc_no in load():
+                print("PC number already exists.\n------\nPress\n")
+                print("1. Modify existing PC")
+                print("2. Remove existing PC")
+                print("3. Back")
+            
+
+                check = int(input("\nEnter your choice: "))
+
+                while check<1 or check>3:
+                    check=input("Invalid input.! Please Try Again. ")    
+
+                if check == 1:
+                    self.update_pc(pc_no)
+                
+                elif check == 2:
+                    self.remove_pc(pc_no)
+                
+                elif check == 3:
+                  self.main()
+                
+                
+            
+            elif(pc_no.isdigit()):
+                os = input("Installed operating system : ")
+                status = input("Status : ")
+                self.PC_List[pc_no] = {"OS": os, "STATUS": status}
+            # temporary taken in a list.
+                print("PC added successfully.")
+                self.store_pc()
+            
             else:
-               self.add_pc()
-        check=int(input("\n\nPress 0 to go back to Menu: "))
-        while check!=0:
-                check=int(input("Invalid input.! Please Try Again. "))    
-        if check==0:
-            self.main()
+                print("\t------ Numerical input expected. -------\n")
+                print("\n------\nPress\n")
+                print("1. Go back to menu")
+                print("2. Try Again")
+                check=int(input())
+                while check!=1 and check!=2:
+                    check=input("Invalid input.! Please Try Again. ")
+                if check==1:
+                    self.main()
+                else:
+                    self.add_pc()
+            check=int(input("\n\nPress 0 to go back to Menu: "))
+            while check!=0:
+                    check=int(input("Invalid input.! Please Try Again. "))    
+            if check==0:
+                self.main()
+         
+        except FileNotFoundError:
+            print("File Not Found")
 
             # -----------------------------------------------------------------
             # =================================================================
             # -----------------------------------------------------------------
 
     def store_pc(self):
-        """This method is for storing all the PCs added"""
-        # filename=input("Write Your File Name : ")
-        # filename = filename+'.txt'
+        """For storing PC in Lab"""
         filename = 'PcList.json'
-        with open('PcList.json') as f:
+        with open(jsonFileName) as f:
             FileContent=json.load(f)
 
-        with open(filename,'w') as f:
+        with open(jsonFileName,'w') as f:
            json.dump(PC_List,f)
 
-        m=int(input("\n\nPress 0 to go back to Menu: "))
-        if m==0:
+        check=int(input("\n\nPress 0 to go back to Menu: "))
+        if check==0:
             self.main()
 
             # -----------------------------------------------------------------
@@ -87,14 +99,14 @@ class PC :
             # -----------------------------------------------------------------
     def remove_pc(self,pc_no):
         """This method is for deleting a particular pc from lab"""
-        with open('PcList.json') as f:
+        with open(jsonFileName) as f:
             FileContent=json.load(f)
 
         if pc_no not in FileContent:
             print("PC is not found.")
         else:
             del FileContent[pc_no]
-            with open('PcList.json','w') as f:
+            with open(jsonFileName,'w') as f:
                 json.dump(FileContent,f)
             print("PC removed successfully.")
 
@@ -109,7 +121,7 @@ class PC :
     def update_pc(self,pc_no):
         """This is for updating PC info such as os,status"""
 
-        with open('PcList.json') as f:
+        with open(jsonFileName) as f:
             FileContent=json.load(f)
 
         if pc_no not in FileContent:
@@ -121,7 +133,7 @@ class PC :
             FileContent[pc_no]["OS"] = os
             FileContent[pc_no]["STATUS"] = status
 
-            with open('PcList.json','w') as f:
+            with open(jsonFileName,'w') as f:
                 json.dump(FileContent,f)
 
             print("PC information updated successfully.")
@@ -138,7 +150,7 @@ class PC :
         """This method will show all pc info including os, status"""
 
         print("\n\nLab PC information\n")
-        with open('PcList.json') as f:
+        with open(jsonFileName) as f:
             FileContent=json.load(f)
 
         if not FileContent:
@@ -162,7 +174,7 @@ class PC :
         """This is for displaying info of a particular PC"""
         print("\nSearch for a PC info\n")
         pc_number = input("Enter PC number: ")
-        with open('PcList.json') as f:
+        with open(jsonFileName) as f:
             FileContent=json.load(f)
         if pc_number in FileContent:
             for pc_no,pc_function in FileContent.items():
