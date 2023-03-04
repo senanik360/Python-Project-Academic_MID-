@@ -1,0 +1,12 @@
+PC number:10
+OS:Windows
+STATUS:Working
+
+PC number:12
+OS:Linux
+STATUS:Working
+
+PC number:13
+OS:Linux
+STATUS:Not Working
+
